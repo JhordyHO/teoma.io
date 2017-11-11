@@ -24,6 +24,11 @@ app.post('/webhook', (req, res) => {
       // will only ever contain one message, so we get index 0
       let webhookEvent = entry.messaging[0];
       console.log(webhookEvent);
+      if (webhook_event.message) {
+    handleMessage(sender_psid, webhook_event.message);        
+  		} else if (webhook_event.postback) {
+    handlePostback(sender_psid, webhook_event.postback);
+  		}
     });
 
     // Returns a '200 OK' response to all requests
