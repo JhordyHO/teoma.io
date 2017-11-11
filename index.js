@@ -2,9 +2,22 @@
 
 // Imports dependencies and set up http server
 const 
-  express = require('express'),
-  bodyParser = require('body-parser'),
-  app = express().use(bodyParser.json()); // creates express http server
+var express = require('express');
+var app = express();
+var bodyParser = require('body-parser'),
+
+app.set('port', (process.env.PORT || 5000));
+
+app.use(express.static(__dirname + '/public'));
+
+// views is directory for all template files
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+
+app.get('/', function(request, response) {
+  response.render('pages/index');
+});
+
 // Creates the endpoint for our webhook 
 app.post('/webhook', (req, res) => {  
  
@@ -35,7 +48,7 @@ app.post('/webhook', (req, res) => {
 app.get('/webhook', (req, res) => {
 
   // Your verify token. Should be a random string.
-  let VERIFY_TOKEN = "EAACdBSQc0RMBAPxlMMWK67IlL0P5eWJ9cyls8VRXL7JSS7ExpwN5aqrHSNbE2sR6ryNDbPFkGZCLSqRzdfviBxDlT3GoljdYLbLpkzjXYyBLZC8HqKR2L1ZCd8uQw9akZBRcDu3ej5rmFO0WwbWFErC9AMZCduRymwDmIe2yQgQZDZD"
+  let VERIFY_TOKEN = "EAACdBSQc0RMBACzv4wZAiEfccZA1NrwjiYhed8wZCrsiK9oE5Qp06wjYZB6ATRPzTlfKRFUCutQGDDLHlUPRWkqjY7SxMKWZAaRmsSmqeg4A0FflMUN95TjlZAjgkSjITbwEpZCQoMuhPhdszpifH3JaSjpYHorgdVAcgukorCP2AZDZD"
     
   // Parse the query params
   let mode = req.query['hub.mode'];
@@ -58,5 +71,8 @@ app.get('/webhook', (req, res) => {
     }
   }
 });
-// Sets server port and logs message on success
-app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
+
+
+app.listen(app.get('port'), function() {
+  console.log('Node app is running on port', app.get('port'));
+});
