@@ -2,21 +2,12 @@
 
 // Imports dependencies and set up http server
 const 
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser'),
+  express = require('express'),
+  bodyParser = require('body-parser'),
+  app = express().use(bodyParser.json()); // creates express http server
 
-app.set('port', (process.env.PORT || 5000));
-
-app.use(express.static(__dirname + '/public'));
-
-// views is directory for all template files
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-
-app.get('/', function(request, response) {
-  response.render('pages/index');
-});
+// Sets server port and logs message on success
+app.listen(process.env.PORT || 5000, () => console.log('webhook is listening'));
 
 // Creates the endpoint for our webhook 
 app.post('/webhook', (req, res) => {  
@@ -48,13 +39,13 @@ app.post('/webhook', (req, res) => {
 app.get('/webhook', (req, res) => {
 
   // Your verify token. Should be a random string.
-  let VERIFY_TOKEN = "##Dxdiag1994"
+  let VERIFY_TOKEN = "Dxdiag1994"
     
   // Parse the query params
   let mode = req.query['hub.mode'];
   let token = req.query['hub.verify_token'];
   let challenge = req.query['hub.challenge'];
-    
+    console.log(mode);
   // Checks if a token and mode is in the query string of the request
   if (mode && token) {
   
@@ -70,9 +61,6 @@ app.get('/webhook', (req, res) => {
       res.sendStatus(403);      
     }
   }
-});
 
 
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
 });
